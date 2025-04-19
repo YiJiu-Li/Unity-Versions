@@ -4,8 +4,8 @@
 
 ## 快速访问链接
 
-📋 **版本链接列表**: [Unity-Version-Links.md](https://github.com/YiJiu-Li/Unity-Versions/blob/master/Unity-Version-Links.md)  
 🌐 **在线预览**: [HTML 预览页面](http://cdn.zhuzhuyun.cn/UnityVs/Versions.html)
+📋 **版本链接列表**: [Unity-Version-Links](https://github.com/YiJiu-Li/Unity-Versions/blob/master/Unity-Version-Links.md)
 
 ## 特性
 
@@ -62,19 +62,7 @@ unityhub://2022.3.10f1/316c1fd686f6
 4. 浏览器会询问是否打开 Unity Hub，选择"打开"
 5. Unity Hub 会自动打开并导航到相应的版本安装页面
 
-#### 方法二：使用脚本打开链接
 
-在 Windows 平台，可以使用以下 PowerShell 命令打开链接：
-
-```powershell
-Start-Process "unityhub://2023.2.20f1/0e25a174756c"
-```
-
-在 macOS 平台，可以使用以下终端命令打开链接：
-
-```bash
-open "unityhub://2023.2.20f1/0e25a174756c"
-```
 
 ### 其他信息
 
@@ -88,7 +76,8 @@ Unity 版本链接的格式为：`unityhub://<版本号>/<哈希值>`，其中�
 
 ## 许可
 
-MIT License
+[**MIT License**](https://github.com/YiJiu-Li/Unity-Versions/blob/master/LICENSE)
+
 
 ## 相关链接
 
