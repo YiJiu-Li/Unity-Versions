@@ -1,0 +1,2554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unity版本下载中心（国际版）</title>
+    <!-- 在<head>标签内添加以下代码 -->
+    <link rel="icon"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAAAAABXZoBIAAAAtklEQVR4Ac3QEZREMQyF4bjXPc51rzsU6153iGOd6lAqFGrBSPycuzO7K33vjc9vOd+JXPrumPkTpdWjyyNxA1oENN+tOuCFBoAeTwobQGMiygqgHsju8L8HgW+5oBrQmYpBx7yitenwDZvS75iDqPtqiZ6QKO1ViR7QXxjmzm9cF9RCv1jeh5wYAkv8x1KI6aiYqfDYObW5Wjgx1G22dfbxsngfXtR0jtkTPZW6rVHpU0WYvrkfG+qBRli2egYAAAAASUVORK5CYII="
+        type="image/svg+xml">
+    <style>
+        /* 基础变量和全局样式 */
+        :root {
+            --primary-color: #2196F3;
+            --secondary-color: #0D47A1;
+            --background-color: #f5f5f5;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --hover-color: #e3f2fd;
+            --accent-color: #FF9800;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 10px 30px;
+        }
+
+        /* 响应式布局 */
+        @media (min-width: 1600px) {
+            .container {
+                max-width: 1800px;
+            }
+
+            .version-list {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+
+        @media (min-width: 1800px) {
+            .container {
+                max-width: 2000px;
+            }
+
+            .version-list {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .versions-container {
+                flex-direction: column;
+            }
+
+            .versions-nav {
+                flex: none;
+                height: 300px;
+                position: static;
+            }
+
+            .versions-content {
+                height: 500px;
+            }
+
+            .version-list {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .version-group-title {
+                font-size: 20px;
+                padding: 12px 15px 8px;
+            }
+
+            .version-group-title::after {
+                font-size: 12px;
+                padding: 1px 6px;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-label {
+                margin-bottom: 5px;
+            }
+
+            .info-content th,
+            .info-content td {
+                padding: 8px;
+                font-size: 13px;
+            }
+
+            .info-title {
+                font-size: 18px;
+                padding: 12px 15px;
+            }
+
+            .info-title:before {
+                font-size: 20px;
+            }
+
+            .info-content h3 {
+                font-size: 16px;
+            }
+
+            .info-section {
+                width: 90vw;
+                bottom: 80px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .description {
+                font-size: 16px;
+            }
+
+            .components {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .version-list {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 1px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="rgba(255,255,255,0.05)"><rect x="0" y="0" width="50" height="50" /><rect x="50" y="50" width="50" height="50" /></svg>') repeat;
+            opacity: 0.2;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 36px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .description {
+            max-width: 800px;
+            margin: 15px auto;
+            font-size: 18px;
+            line-height: 1.6;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+
+
+        /* 过滤器样式 */
+        .filters {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            min-width: 100px;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+            font-size: 16px;
+            min-width: 200px;
+        }
+
+        .platforms {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .platform-btn {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--card-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .platform-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .platform-btn.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* 版本容器和导航样式 */
+        .versions-container {
+            display: flex;
+            gap: 10px;
+            height: 780px;
+            margin-bottom: 30px;
+            position: relative;
+            align-items: stretch;
+        }
+
+        .versions-nav {
+            flex: 0 0 220px;
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            height: 780px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: sticky;
+            top: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #ccc transparent;
+            z-index: 5;
+            align-self: flex-start;
+        }
+
+        .versions-nav::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .versions-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .versions-nav::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 6px;
+        }
+
+        .versions-nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .versions-nav li {
+            margin-bottom: 5px;
+        }
+
+        .versions-nav li button {
+            width: 100%;
+            text-align: left;
+            padding: 10px;
+            background: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .versions-nav li button:hover {
+            background-color: var(--hover-color);
+        }
+
+        .versions-nav li button.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* 版本内容区域样式 */
+        .versions-content {
+            flex: 1;
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 0 0 30px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            height: 780px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #ccc transparent;
+            position: relative;
+        }
+
+        .versions-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .versions-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .versions-content::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 6px;
+        }
+
+        .versions-content:empty::after {
+            content: "未找到符合条件的版本";
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #777;
+            font-style: italic;
+            font-size: 16px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%23cccccc" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>');
+            background-repeat: no-repeat;
+            background-position: center 40%;
+            background-size: 60px;
+            padding-top: 140px;
+            box-sizing: border-box;
+        }
+
+        /* 版本组和子组样式 */
+        .version-group {
+            margin-bottom: 30px;
+            position: relative;
+            padding: 0 15px;
+        }
+
+        .version-group:first-child {
+            padding-top: 10px;
+        }
+
+        .version-group:last-child {
+            margin-bottom: 40px;
+        }
+
+        .version-group-title {
+            font-size: 22px;
+            margin: 0 -15px 15px -15px;
+            padding: 15px 20px 8px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background-color: var(--card-color);
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .version-group-title::after {
+            content: attr(data-count);
+            font-size: 14px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-weight: normal;
+        }
+
+        /* 版本子组折叠样式 */
+        .version-subgroup {
+            margin-bottom: 25px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .version-subgroup:last-child {
+            margin-bottom: 15px;
+        }
+
+        /* 版本子组折叠样式 - 更突出的背景 */
+        .version-subgroup-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            padding: 8px 12px 8px 12px;
+            border-left: 4px solid var(--secondary-color);
+            background-color: rgba(33, 150, 243, 0.08);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* 添加居中对齐 */
+            cursor: pointer;
+            user-select: none;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .version-subgroup-title:hover {
+            background-color: rgba(33, 150, 243, 0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .version-subgroup-title::after {
+            content: attr(data-count);
+            font-size: 12px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: var(--secondary-color);
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-weight: normal;
+            margin-right: 0;
+            /* 移除右侧margin */
+            margin-left: 10px;
+            /* 添加左侧margin */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 调整子标题内部元素的位置 */
+        .version-subgroup-title::before {
+            content: "▼";
+            font-size: 12px;
+            margin-right: 10px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+            color: var(--secondary-color);
+            background-color: rgba(255, 255, 255, 0.5);
+            width: 18px;
+            height: 18px;
+            text-align: center;
+            line-height: 18px;
+            border-radius: 50%;
+            position: absolute;
+            /* 改为绝对定位 */
+            left: 12px;
+            /* 距离左侧12px */
+        }
+
+
+        .version-subgroup-title.collapsed {
+            background-color: rgba(33, 150, 243, 0.05);
+            box-shadow: none;
+        }
+
+        .version-subgroup-title.collapsed::before {
+            transform: rotate(-90deg);
+        }
+
+        /* 让LTS徽章也保持一致风格 */
+        .lts-badge {
+            display: inline-block;
+            background-color: #FF9800;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        .version-list {
+            display: grid;
+            padding: 5px 0px 0px 0px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: max-height 0.5s ease, opacity 0.3s ease;
+            max-height: 9999px;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        .version-list.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 基础卡片样式 */
+        .version-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 220px;
+            position: relative;
+            background-color: var(--card-color);
+            box-sizing: border-box;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            width: 100%;
+        }
+
+
+
+
+        /* 版本名称样式增强 */
+        .version-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #e0e0e0;
+            color: var(--secondary-color);
+        }
+
+        /* 鼠标悬停效果增强 */
+        .version-card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-4px);
+            z-index: 5;
+            border-color: var(--primary-color);
+        }
+
+        /* 修改这部分代码 */
+        .version-name::after {
+            content: "正式版";
+            /* 只显示正式版 */
+            display: inline-block;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            background-color: #4CAF50;
+            color: white;
+            font-weight: normal;
+            vertical-align: middle;
+        }
+
+        /* 确保.latest类的优先级更高 */
+        .version-card.latest {
+            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.15) !important;
+            position: relative;
+        }
+
+        /* 可选：为latest版本添加标记 */
+        .version-card.latest::before {
+            content: "最新";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 每隔一个卡片使用不同的背景色 */
+        .version-card:nth-child(odd) {
+            background-color: #f9fbff;
+        }
+
+        /* 为Alpha/Beta版本添加标识 */
+        .version-card[data-version*="a"] {
+            border-left: 4px solid #FF5722;
+        }
+
+        .version-card[data-version*="b"] {
+            border-left: 4px solid #FF9800;
+        }
+
+        .version-card[data-version*="a"] .version-name::after {
+            content: "Alpha";
+            background-color: #FF5722;
+        }
+
+        .version-card[data-version*="b"] .version-name::after {
+            content: "Beta";
+            background-color: #FF9800;
+        }
+
+        .version-card[data-version*="p"] .version-name::after {
+            content: "预览版";
+            background-color: #9C27B0;
+        }
+
+        /* MD5显示优化 */
+        .version-md5 {
+            font-size: 12px;
+            color: #777;
+            word-break: break-all;
+            margin-bottom: 12px;
+            background-color: rgba(0, 0, 0, 0.03);
+            padding: 5px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+        }
+
+        /* 下载链接样式 */
+        .download-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .download-link {
+            padding: 8px 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .download-link:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .download-link.secondary {
+            background-color: #4CAF50;
+        }
+
+        .download-link.secondary:hover {
+            background-color: #388E3C;
+        }
+
+        /* 组件选择器样式 */
+        .component-selector {
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+        }
+
+        .component-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .components {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .component-btn {
+            padding: 10px 12px;
+            background-color: #f5f5f5;
+            color: #555;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .component-btn:hover {
+            background-color: var(--hover-color);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .component-btn.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 帮助信息样式 */
+        .toggle-info-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 24px;
+        }
+
+        .toggle-info-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-section {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 1200px;
+            max-width: 100vw;
+            max-height: 100vh;
+            overflow-y: auto;
+            background-color: var(--card-color);
+            border-radius: 12px;
+            padding: 0;
+            margin-bottom: 0;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+            border-left: 5px solid var(--primary-color);
+            transition: transform 0.4s ease, opacity 0.3s ease;
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .info-section.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .info-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            background-color: #f8f9fa;
+            transition: background-color 0.2s ease;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .info-title:hover {
+            background-color: #f0f2f5;
+        }
+
+        .info-title:before {
+            content: "ℹ️";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .info-title:after {
+            content: "▼";
+            font-size: 14px;
+            position: absolute;
+            right: 20px;
+            transform: rotate(0deg);
+            transition: transform 0.3s ease;
+        }
+
+        .info-title.collapsed:after {
+            transform: rotate(-90deg);
+        }
+
+        .info-content {
+            font-size: 15px;
+            line-height: 1.7;
+            padding: 0 20px 20px;
+            overflow-y: auto;
+            max-height: calc(80vh - 60px);
+        }
+
+        .info-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .info-content h3 {
+            color: var(--secondary-color);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 20px;
+            border-bottom: 2px solid rgba(13, 71, 161, 0.1);
+            padding-bottom: 8px;
+            display: inline-block;
+        }
+
+        .info-content p {
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .info-content code {
+            background-color: #f0f0f0;
+            padding: 3px 7px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            color: #d14;
+            font-size: 14px;
+            border: 1px solid #eaeaea;
+        }
+
+        .info-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            overflow-x: auto;
+            display: block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+        }
+
+        .info-content th,
+        .info-content td {
+            padding: 14px;
+            border: 1px solid #eaeaea;
+            text-align: left;
+            color: #444;
+        }
+
+        .info-content th {
+            background-color: #f5f7f9;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .info-content td {
+            background-color: #ffffff;
+        }
+
+        .info-content tr:nth-child(even) td {
+            background-color: #fafafa;
+        }
+
+        .info-content tr:hover td {
+            background-color: #f0f7ff;
+        }
+
+        /* 页脚样式优化 */
+        .footer {
+            margin-top: 40px;
+            padding: 5px 0;
+            background-color: #f0f4f8;
+            border-top: 1px solid #e0e6ed;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-content .author-info {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.07) 0%, rgba(13, 71, 161, 0.07) 100%);
+            padding: 8px 16px;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .footer-content .author-info span {
+            font-weight: 500;
+            color: #37474f;
+        }
+
+        .footer-meta {
+            color: #78909c;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-meta a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .footer-meta a:hover {
+            color: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .footer-meta .github-link {
+            display: inline-flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s ease;
+        }
+
+        .footer-meta .github-link:hover {
+            background-color: #e8f0fe;
+            border-color: var(--primary-color);
+        }
+
+        .github-icon {
+            margin-right: 6px;
+            width: 18px;
+            height: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-meta {
+                margin-top: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>Unity版本下载中心（国际版）</h1>
+                <p class="description">提供所有Unity版本的下载链接，支持UnityHub链接和直接下载</p>
+                <!-- <div class="author-info">
+                    <span>作者：依旧</span>
+                </div> -->
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="info-section" id="info-section">
+            <div class="info-title" id="info-toggle">下载说明与帮助</div>
+            <div class="info-content">
+                <h3>UnityHub链接使用方法</h3>
+                <p>格式: <code>unityhub://[版本号]/[MD5码]</code></p>
+                <p>例如: <code>unityhub://2021.3.0f1/6eacc8284459</code></p>
+                <p><strong>使用方法</strong>: 将链接复制到浏览器地址栏，或使用 Win+R 运行，会自动打开Unity Hub并开始下载指定版本。</p>
+
+                <h3>直接下载链接格式</h3>
+                <table>
+                    <tr>
+                        <th>安装目标平台</th>
+                        <th>直链下载格式</th>
+                        <th>支持版本</th>
+                    </tr>
+                    <tr>
+                        <td>Windows(64 bit)</td>
+                        <td>https://download.unity3d.com/download_unity/MD5码/Windows64EditorInstaller/UnitySetup64-版本号.exe
+                        </td>
+                        <td>所有版本</td>
+                    </tr>
+                    <tr>
+                        <td>Windows(32 bit)</td>
+                        <td>https://download.unity3d.com/download_unity/MD5码/Windows32EditorInstaller/UnitySetup32-版本号.exe
+                        </td>
+                        <td>Unity 5.x</td>
+                    </tr>
+                    <tr>
+                        <td>Windows(ARM64)</td>
+                        <td>https://download.unity3d.com/download_unity/MD5码/WindowsArm64EditorInstaller/UnitySetupArm64-版本号.exe
+                        </td>
+                        <td>Unity 6.x或更高</td>
+                    </tr>
+                    <tr>
+                        <td>Mac(Apple silicon)</td>
+                        <td>https://download.unity3d.com/download_unity/MD5码/MacEditorInstallerArm64/Unity-版本号.pkg</td>
+                        <td>2021.2.0或更高</td>
+                    </tr>
+                    <tr>
+                        <td>Mac(Intel)</td>
+                        <td>https://download.unity3d.com/download_unity/MD5码/MacEditorInstaller/Unity-版本号.pkg</td>
+                        <td>所有版本</td>
+                    </tr>
+                    <tr>
+                        <td>Linux</td>
+                        <td>https://download.unity3d.com/download_unity/MD5码/LinuxEditorInstaller/Unity-版本号.tar.xz</td>
+                        <td>2017.4.6或更高</td>
+                    </tr>
+                </table>
+
+                <h3>组件安装直链格式</h3>
+                <p>https://download.unity3d.com/download_unity/MD5码/安装目标平台/UnitySetup-构建平台-Support-for-Editor-版本号.安装包后缀
+                </p>
+
+                <table>
+                    <tr>
+                        <th>安装目标平台</th>
+                        <th>直链下载格式</th>
+                    </tr>
+                    <tr>
+                        <td>Windows</td>
+                        <td>https://download.unity3d.com/download_unity/MD5码/TargetSupportInstaller/UnitySetup-构建平台-Support-for-Editor-版本号.exe
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mac OS</td>
+                        <td>https://download.unity3d.com/download_unity/MD5码/MacEditorTargetInstaller/UnitySetup-构建平台-Support-for-Editor-版本号.pkg
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Linux</td>
+                        <td>https://download.unity3d.com/download_unity/MD5码/LinuxEditorTargetInstaller/UnitySetup-构建平台-Support-for-Editor-版本号.tar.xz
+                        </td>
+                    </tr>
+                </table>
+
+                <h3>可用构建平台</h3>
+                <div class="components">
+                    <button class="component-btn">Android</button>
+                    <button class="component-btn">iOS</button>
+                    <button class="component-btn">WebGL</button>
+                    <button class="component-btn">AppleTV</button>
+                    <button class="component-btn">Linux-IL2CPP</button>
+                    <button class="component-btn">Linux-Mono</button>
+                    <button class="component-btn">Linux-Server</button>
+                    <button class="component-btn">Mac-IL2CPP</button>
+                    <button class="component-btn">Mac-Server</button>
+                    <button class="component-btn">Windows-Mono</button>
+                    <button class="component-btn">Windows-Server</button>
+                    <button class="component-btn">Universal-Windows-Platform</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="toggle-info-btn" id="toggle-info-btn" title="显示/隐藏下载说明">ℹ️</button>
+
+        <div class="filters">
+            <div class="filter-row">
+                <span class="filter-label">搜索版本:</span>
+                <input type="text" id="search-input" class="search-box" placeholder="例如: 2021.3.15f1">
+            </div>
+
+            <div class="filter-row">
+                <span class="filter-label">平台:</span>
+                <div class="platforms">
+                    <button class="platform-btn selected" data-platform="Windows64">Windows 64位</button>
+                    <button class="platform-btn" data-platform="Windows32">Windows 32位</button>
+                    <button class="platform-btn" data-platform="WindowsArm64">Windows ARM64</button>
+                    <button class="platform-btn" data-platform="MacIntel">Mac Intel</button>
+                    <button class="platform-btn" data-platform="MacArm">Mac Apple芯片</button>
+                    <button class="platform-btn" data-platform="Linux">Linux</button>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <span class="filter-label">主版本:</span>
+                <select id="major-version">
+                    <option value="all">全部版本</option>
+                    <option value="6000">Unity 6000</option>
+                    <option value="2023">Unity 2023</option>
+                    <option value="2022">Unity 2022</option>
+                    <option value="2021">Unity 2021</option>
+                    <option value="2020">Unity 2020</option>
+                    <option value="2019">Unity 2019</option>
+                    <option value="2018">Unity 2018</option>
+                    <option value="2017">Unity 2017</option>
+                    <option value="5">Unity 5</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="versions-container">
+            <div class="versions-nav">
+                <ul id="version-nav-list">
+                    <!-- 版本导航将通过JavaScript生成 -->
+                </ul>
+            </div>
+
+            <div class="versions-content" id="versions-content">
+                <!-- 版本内容将通过JavaScript生成 -->
+            </div>
+        </div>
+        <!-- 更新页脚内容 -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="author-info">
+                        <span>© 2025 依旧</span>
+                    </div>
+                    <div class="footer-meta">
+                        <span>最后更新: 2025/4/20</span>
+                        <a href="mailto:contact@example.com">联系作者</a>
+                        <a href="https://unity.com/releases/editor/archive" target="_blank">Unity 官方网站</a>
+                        <a href="https://github.com/YiJiu-Li" class="github-link" target="_blank">
+                            <svg class="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
+                                fill="currentColor">
+                                <path
+                                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.52-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+                            </svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 版本数据将从JSON文件加载
+        let versionsData = null;
+        let currentPlatform = 'Windows64';
+        const ltsVersions = ["6000.0", "2023.2", "2023.1", "2022.3", "2022.2", "2022.1", "2021.3", "2021.2", "2021.1", "2020.3", "2020.2", "2020.1", "2019.4", "2019.3", "2019.2", "2019.1", "2018.4", "2018.3", "2018.2", "2018.1", "2017.4", "2017.3", "2017.2", "2017.1", "5.6"];
+
+        // 平台版本限制
+        const platformVersionLimits = {
+            'Windows64': '4.0.0',
+            'Windows32': '1.0.0',
+            'WindowsArm64': '6000.0.0',
+            'MacIntel': '3.0.0',
+            'MacArm': '2021.2.0',
+            'Linux': '2017.4.6'
+        };
+
+        // 默认数据，当JSON加载失败时使用
+        const defaultVersionsData = {
+            meta: {
+                generated: new Date().toISOString().split('T')[0]
+            },
+            versions: {
+                "6000": {
+                    "0": {
+                        "6000.0.47f1": "2ad1ed33fd3b",
+                        "6000.0.46f1": "fb93bc360d3a",
+                        "6000.0.45f1": "d91bd3d4e081",
+                        "6000.0.44f1": "101c91f3a8fb",
+                        "6000.0.43f1": "97272b72f107",
+                        "6000.0.42f1": "feb9a7235030",
+                        "6000.0.41f1": "46e447368a18",
+                        "6000.0.40f1": "157d81624ddf",
+                        "6000.0.39f1": "15ea7ed0b100",
+                        "6000.0.38f1": "82314a941f2d",
+                        "6000.0.37f1": "090b7797214c",
+                        "6000.0.36f1": "9fe3b5f71dbb",
+                        "6000.0.35f1": "9a3bc604008a",
+                        "6000.0.34f1": "5ab2d9ed9190",
+                        "6000.0.33f1": "433b0a79340b",
+                        "6000.0.32f1": "b2e806cf271c",
+                        "6000.0.31f1": "a206c360e2a8",
+                        "6000.0.30f1": "62b05ba0686a",
+                        "6000.0.29f1": "9fafe5c9db65",
+                        "6000.0.28f1": "f336aca0cab5",
+                        "6000.0.27f1": "27c554a2199c",
+                        "6000.0.26f1": "ccb7c73d2c02",
+                        "6000.0.25f1": "4859ab7b5a49",
+                        "6000.0.24f1": "11fa355cd605",
+                        "6000.0.23f1": "1c4764c07fb4",
+                        "6000.0.22f1": "001fa5a8e29a",
+                        "6000.0.21f1": "e2bacb8dee3a",
+                        "6000.0.20f1": "05208a74e9aa",
+                        "6000.0.19f1": "302b264628f9",
+                        "6000.0.18f1": "3699cf869f9b",
+                        "6000.0.17f1": "95e1b8cf7a6b",
+                        "6000.0.16f1": "ae37dbaefed8",
+                        "6000.0.15f1": "6a96561936c0",
+                        "6000.0.14f1": "e12ab2d6a089",
+                        "6000.0.13f1": "53a692e3fca9",
+                        "6000.0.12f1": "7defd84cdab8",
+                        "6000.0.11f1": "fa01dd6b76d5",
+                        "6000.0.10f1": "413673acabac",
+                        "6000.0.9f1": "1490908003ac",
+                        "6000.0.8f1": "fa7102f01711",
+                        "6000.0.7f1": "7dd95c051e11",
+                        "6000.0.5f1": "17028576122a",
+                        "6000.0.4f1": "b5d5d06b038a",
+                        "6000.0.3f1": "019aa96b6ed9",
+                        "6000.0.2f1": "c36be92430b9",
+                        "6000.0.1f1": "d9cf669c6271",
+                        "6000.0.0f1": "4ff56b3ea44c"
+                    }
+                },
+                "2023": {
+                    "2": {
+                        "2023.2.20f1": "0e25a174756c",
+                        "2023.2.19f1": "95c298372b1e",
+                        "2023.2.18f1": "1cb755715f58",
+                        "2023.2.17f1": "396a1c6fe404",
+                        "2023.2.16f1": "7f45223012db",
+                        "2023.2.15f1": "c5cbb0b314fa",
+                        "2023.2.14f1": "eeca29774eb5",
+                        "2023.2.13f1": "70197a359f36",
+                        "2023.2.12f1": "19eeb3b320af",
+                        "2023.2.11f1": "6a1e21c61430",
+                        "2023.2.10f1": "316c1fd686f6",
+                        "2023.2.9f1": "0c9c2e1f4bef",
+                        "2023.2.8f1": "a3bb09f8c8c4",
+                        "2023.2.7f1": "0a9195b3d453",
+                        "2023.2.6f1": "57daeefc879b",
+                        "2023.2.5f1": "381b4941466e",
+                        "2023.2.4f1": "accd6d46ced1",
+                        "2023.2.3f1": "21747dafc6ee",
+                        "2023.2.2f1": "dfe9eb92cac5",
+                        "2023.2.1f1": "a6dd9a634651",
+                        "2023.2.0f1": "d0d63d039a6f"
+                    },
+                    "1": {
+                        "2023.1.20f1": "35a524b12060",
+                        "2023.1.19f1": "629111e352bc",
+                        "2023.1.18f1": "2b639e48c919",
+                        "2023.1.17f1": "b84c4024cd38",
+                        "2023.1.16f1": "e5ad54273a6f",
+                        "2023.1.15f1": "831263a4172c",
+                        "2023.1.14f1": "9492f7722ddd",
+                        "2023.1.13f1": "ffeab063bb93",
+                        "2023.1.12f1": "38370f5b2257",
+                        "2023.1.11f1": "fbf46ad88f3d",
+                        "2023.1.10f1": "661833f8c66c",
+                        "2023.1.9f1": "f3f94c8cdc49",
+                        "2023.1.8f1": "ab88ac34d80c",
+                        "2023.1.7f1": "4f4e359ec3fc",
+                        "2023.1.6f1": "964b2488c462",
+                        "2023.1.5f1": "9dce81d9e7e0",
+                        "2023.1.4f1": "611a2ee54063",
+                        "2023.1.3f1": "e00e24c187a5",
+                        "2023.1.2f1": "e348e726afe7",
+                        "2023.1.1f1": "46620eadcc07",
+                        "2023.1.0f1": "a008fa768e6c"
+                    }
+                },
+                "2022": {
+                    "3": {
+                        "2022.3.61f1": "6c53ebaf375d",
+                        "2022.3.60f1": "5f63fdee6d95",
+                        "2022.3.59f1": "630718f645a5",
+                        "2022.3.58f1": "ed7f6eacb62e",
+                        "2022.3.57f1": "9d8bd91adc0a",
+                        "2022.3.56f1": "dd0c98481d00",
+                        "2022.3.55f1": "9f374180d209",
+                        "2022.3.54f1": "129125d4e700",
+                        "2022.3.53f1": "df4e529d20d3",
+                        "2022.3.52f1": "1120fcb54228",
+                        "2022.3.51f1": "9f9d16c45e54",
+                        "2022.3.50f1": "c3db7f8bf9b1",
+                        "2022.3.49f1": "4dae1bb8668d",
+                        "2022.3.48f1": "8bf49c377ebf",
+                        "2022.3.47f1": "88c277b85d21",
+                        "2022.3.46f1": "8e9b8558c41a",
+                        "2022.3.45f1": "a13dfa44d684",
+                        "2022.3.44f1": "c3ae09b9f03c",
+                        "2022.3.43f1": "85497d293fa1",
+                        "2022.3.42f1": "2dcb6a0abc42",
+                        "2022.3.41f1": "0f988161febf",
+                        "2022.3.40f1": "cbdda657d2f0",
+                        "2022.3.39f1": "4e1b0f82c39a",
+                        "2022.3.38f1": "c5d5a7410213",
+                        "2022.3.37f1": "340ba89e4c23",
+                        "2022.3.36f1": "95a4219250e5",
+                        "2022.3.35f1": "011206c7a712",
+                        "2022.3.34f1": "4886f5360533",
+                        "2022.3.33f1": "b2c853adf198",
+                        "2022.3.32f1": "c8300dc0a3fa",
+                        "2022.3.31f1": "4ede2d13e8b4",
+                        "2022.3.30f1": "70558241b701",
+                        "2022.3.29f1": "8d510ca76d2b",
+                        "2022.3.28f1": "6bae5ce6b222",
+                        "2022.3.27f1": "73effa14754f",
+                        "2022.3.26f1": "ec6cd8118806",
+                        "2022.3.25f1": "530ae0ba3889",
+                        "2022.3.24f1": "334eb2a0b267",
+                        "2022.3.23f1": "dbb3f7c5b5c6",
+                        "2022.3.22f1": "887be4894c44",
+                        "2022.3.21f1": "bf09ca542b87",
+                        "2022.3.20f1": "61c2feb0970d",
+                        "2022.3.19f1": "244b723c30a6",
+                        "2022.3.18f1": "d29bea25151d",
+                        "2022.3.17f1": "4fc78088f837",
+                        "2022.3.16f1": "d2c21f0ef2f1",
+                        "2022.3.15f1": "b58023a2b463",
+                        "2022.3.14f1": "eff2de9070d8",
+                        "2022.3.13f1": "5f90a5ebde0f",
+                        "2022.3.12f1": "4fe6e059c7ef",
+                        "2022.3.11f1": "d00248457e15",
+                        "2022.3.10f1": "ff3792e53c62",
+                        "2022.3.9f1": "ea401c316338",
+                        "2022.3.8f1": "b5eafc012955",
+                        "2022.3.7f1": "b16b3b16c7a0",
+                        "2022.3.6f1": "b9e6e7e9fa2d",
+                        "2022.3.5f1": "9674261d40ee",
+                        "2022.3.4f1": "35713cd46cd7",
+                        "2022.3.3f1": "7cdc2969a641",
+                        "2022.3.2f1": "d74737c6db50",
+                        "2022.3.1f1": "f18e0c1b5784",
+                        "2022.3.0f1": "fb119bb0b476"
+                    },
+                    "2": {
+                        "2022.2.21f1": "4907324dc95b",
+                        "2022.2.20f1": "c5d806317f84",
+                        "2022.2.19f1": "765657fe9343",
+                        "2022.2.18f1": "5ebc6493a86f",
+                        "2022.2.17f1": "54cb9bda89c4",
+                        "2022.2.16f1": "d535843d11e1",
+                        "2022.2.15f1": "30d813e1a2a9",
+                        "2022.2.14f1": "b2c9b1ac6cc0",
+                        "2022.2.13f1": "5f5de2657605",
+                        "2022.2.12f1": "022dac4955a3",
+                        "2022.2.11f1": "621cd60d08fd",
+                        "2022.2.10f1": "bcebec703747",
+                        "2022.2.9f1": "1cc571a6ec95",
+                        "2022.2.8f1": "996aee41dc57",
+                        "2022.2.7f1": "8331acaee5d3",
+                        "2022.2.6f1": "10bfa6201ced",
+                        "2022.2.5f1": "551d45108343",
+                        "2022.2.4f1": "8216e0211249",
+                        "2022.2.3f1": "55531d7fa82e",
+                        "2022.2.2f1": "c93c5d3acf5b",
+                        "2022.2.1f1": "4fead5835099",
+                        "2022.2.0f1": "35dcd44975df"
+                    },
+                    "1": {
+                        "2022.1.24f1": "709dddfb713f",
+                        "2022.1.23f1": "9636b062134a",
+                        "2022.1.22f1": "6b6e9fc2adda",
+                        "2022.1.21f1": "9ac1ff5ca45b",
+                        "2022.1.20f1": "01d83b40d570",
+                        "2022.1.19f1": "2fd7b40534d1",
+                        "2022.1.18f1": "8a091f9adba4",
+                        "2022.1.17f1": "2d349551e475",
+                        "2022.1.16f1": "7321c9670bc2",
+                        "2022.1.15f1": "42973686a05c",
+                        "2022.1.14f1": "ff7e140968b4",
+                        "2022.1.13f1": "22856944e6d2",
+                        "2022.1.12f1": "916d9c03b898",
+                        "2022.1.11f1": "09bebd6e9324",
+                        "2022.1.10f1": "9aa0f82c4f96",
+                        "2022.1.9f1": "07e076b6d414",
+                        "2022.1.8f1": "2961e8c2b463",
+                        "2022.1.7f1": "240f4c1f462c",
+                        "2022.1.6f1": "e49a51cf6290",
+                        "2022.1.5f1": "feea5ec8f162",
+                        "2022.1.4f1": "76dd1f94b339",
+                        "2022.1.3f1": "1cedbfe38737",
+                        "2022.1.2f1": "9427c1534183",
+                        "2022.1.1f1": "53d13f540f71",
+                        "2022.1.0f1": "369b620af41c"
+                    }
+                },
+                "2021": {
+                    "3": {
+                        "2021.3.48f1": "563f33a39012",
+                        "2021.3.47f1": "c5ae54106769",
+                        "2021.3.46f1": "ee7dc81ce485",
+                        "2021.3.45f1": "0da89fac8e79",
+                        "2021.3.44f1": "94d194ca434d",
+                        "2021.3.43f1": "6f9470916942",
+                        "2021.3.42f1": "f1197811e8ce",
+                        "2021.3.41f1": "6c5a9e20c022",
+                        "2021.3.40f1": "6fcab7dbbbc1",
+                        "2021.3.39f1": "fb3b7b32f191",
+                        "2021.3.38f1": "7a2fa5d8d101",
+                        "2021.3.37f1": "3b6005ad5ad6",
+                        "2021.3.36f1": "7a0645017be0",
+                        "2021.3.35f1": "157b46ce122a",
+                        "2021.3.34f1": "25266724e7bd",
+                        "2021.3.33f1": "ee5a2aa03ab2",
+                        "2021.3.32f1": "3b9dae9532f5",
+                        "2021.3.31f1": "3409e2af086f",
+                        "2021.3.30f1": "b4360d7cdac4",
+                        "2021.3.29f1": "204d6dc9ae1c",
+                        "2021.3.28f1": "232e59c3f087",
+                        "2021.3.27f1": "ca3ffb99bcc6",
+                        "2021.3.26f1": "a16dc32e0ff2",
+                        "2021.3.25f1": "68ef2c4f8861",
+                        "2021.3.24f1": "cf10dcf7010d",
+                        "2021.3.23f1": "213b516bf396",
+                        "2021.3.22f1": "b6c551784ba3",
+                        "2021.3.21f1": "1b156197d683",
+                        "2021.3.20f1": "577897200b8b",
+                        "2021.3.19f1": "c9714fde33b6",
+                        "2021.3.18f1": "3129e69bc0c7",
+                        "2021.3.17f1": "3e8111cac19d",
+                        "2021.3.16f1": "4016570cf34f",
+                        "2021.3.15f1": "e8e88683f834",
+                        "2021.3.14f1": "eee1884e7226",
+                        "2021.3.13f1": "9e7d58001ecf",
+                        "2021.3.12f1": "8af3c3e441b1",
+                        "2021.3.11f1": "0a5ca18544bf",
+                        "2021.3.10f1": "1c7d0df0160b",
+                        "2021.3.9f1": "ad3870b89536",
+                        "2021.3.8f1": "b30333d56e81",
+                        "2021.3.7f1": "24e8595d6d43",
+                        "2021.3.6f1": "7da38d85baf6",
+                        "2021.3.5f1": "40eb3a945986",
+                        "2021.3.4f1": "cb45f9cae8b7",
+                        "2021.3.3f1": "af2e63e8f9bd",
+                        "2021.3.2f1": "d6360bedb9a0",
+                        "2021.3.1f1": "3b70a0754835",
+                        "2021.3.0f1": "6eacc8284459"
+                    },
+                    "2": {
+                        "2021.2.19f1": "602ecdbb2fb0",
+                        "2021.2.18f1": "0c6e675195cf",
+                        "2021.2.17f1": "efb8f635e7b1",
+                        "2021.2.16f1": "559fc0ec6670",
+                        "2021.2.15f1": "3b8567f665bb",
+                        "2021.2.14f1": "bcb93e5482d2",
+                        "2021.2.13f1": "90b6766da538",
+                        "2021.2.12f1": "48b1aa000234",
+                        "2021.2.11f1": "e50cafbb4399",
+                        "2021.2.10f1": "ee872746220e",
+                        "2021.2.9f1": "921b45a28ab6",
+                        "2021.2.8f1": "d0e5f0a7b06a",
+                        "2021.2.7f1": "6bd9e232123f",
+                        "2021.2.6f1": "8c4e826ba445",
+                        "2021.2.5f1": "4ec9a5e799f5",
+                        "2021.2.4f1": "99ba6aa4c552",
+                        "2021.2.3f1": "32358a8527b4",
+                        "2021.2.2f1": "5e2b1e92c7f8",
+                        "2021.2.1f1": "c20c6d589440",
+                        "2021.2.0f1": "4bf1ec4b23c9"
+                    },
+                    "1": {
+                        "2021.1.28f1": "f3f9dc10f3dd",
+                        "2021.1.27f1": "7e296a84045d",
+                        "2021.1.26f1": "6f076387c01d",
+                        "2021.1.25f1": "b6f2b893ea32",
+                        "2021.1.24f1": "6667702a1e7c",
+                        "2021.1.23f1": "b50729e604a9",
+                        "2021.1.22f1": "a137e5fb0427",
+                        "2021.1.21f1": "f2d5d3c59f8c",
+                        "2021.1.20f1": "be552157821d",
+                        "2021.1.19f1": "5f5eb8bbdc25",
+                        "2021.1.18f1": "25bdc3efbc2d",
+                        "2021.1.17f1": "03b40fe07a36",
+                        "2021.1.16f1": "5fa502fca597",
+                        "2021.1.15f1": "e767a7370072",
+                        "2021.1.14f1": "51d2f824827f",
+                        "2021.1.13f1": "a03098edbbe0",
+                        "2021.1.12f1": "afcadd793de6",
+                        "2021.1.11f1": "4d8c25f7477e",
+                        "2021.1.10f1": "b15f561b2cef",
+                        "2021.1.9f1": "7a790e367ab3",
+                        "2021.1.7f1": "d91830b65d9b",
+                        "2021.1.6f1": "c0fade0cc7e9",
+                        "2021.1.5f1": "3737af19df53",
+                        "2021.1.4f1": "4cd64a618c1b",
+                        "2021.1.3f1": "4bef613afd59",
+                        "2021.1.2f1": "e5d502d80fbb",
+                        "2021.1.1f1": "6fdc41dfa55a",
+                        "2021.1.0f1": "61a549675243"
+                    }
+                },
+                "2020": {
+                    "3": {
+                        "2020.3.48f1": "b805b124c6b7",
+                        "2020.3.47f1": "5ef4f5b5e2d4",
+                        "2020.3.46f1": "18bc01a066b4",
+                        "2020.3.45f1": "660cd1701bd5",
+                        "2020.3.44f1": "7f159b6136da",
+                        "2020.3.43f1": "75bff06b76bf",
+                        "2020.3.42f1": "7ade1201f527",
+                        "2020.3.41f1": "7c19dc9acfda",
+                        "2020.3.40f1": "ba48d4efcef1",
+                        "2020.3.39f1": "fd6670bb8be9",
+                        "2020.3.38f1": "8f5fde82e2dc",
+                        "2020.3.37f1": "8c66806a0c04",
+                        "2020.3.36f1": "71f96b79b9f0",
+                        "2020.3.35f1": "18e4db7a9996",
+                        "2020.3.34f1": "9a4c9c70452b",
+                        "2020.3.33f1": "915a7af8b0d5",
+                        "2020.3.32f1": "12f8b0834f07",
+                        "2020.3.31f1": "6b54b7616050",
+                        "2020.3.30f1": "1fb1bf06830e",
+                        "2020.3.29f1": "2ff179115da0",
+                        "2020.3.28f1": "f5400f52e03f",
+                        "2020.3.27f1": "e759542391ea",
+                        "2020.3.26f1": "7298b473bc1a",
+                        "2020.3.25f1": "9b9180224418",
+                        "2020.3.24f1": "79c78de19888",
+                        "2020.3.23f1": "c5d91304a876",
+                        "2020.3.22f1": "e1a7f79fd887",
+                        "2020.3.21f1": "a38c86f6690f",
+                        "2020.3.20f1": "41c4e627c95f",
+                        "2020.3.19f1": "68f137dc9bbe",
+                        "2020.3.18f1": "a7d1c678663c",
+                        "2020.3.17f1": "a4537701e4ab",
+                        "2020.3.16f1": "049d6eca3c44",
+                        "2020.3.15f2": "6cf78cb77498",
+                        "2020.3.14f1": "d0d1bb862f9d",
+                        "2020.3.13f1": "71691879b7f5",
+                        "2020.3.12f1": "b3b2c6512326",
+                        "2020.3.11f1": "99c7afb366b3",
+                        "2020.3.10f1": "297d780c91bc",
+                        "2020.3.9f1": "108be757e447",
+                        "2020.3.8f1": "507919d4fff5",
+                        "2020.3.7f1": "dd97f2c94397",
+                        "2020.3.6f1": "338bb68529b2",
+                        "2020.3.5f1": "8095aa901b9b",
+                        "2020.3.4f1": "0abb6314276a",
+                        "2020.3.3f1": "76626098c1c4",
+                        "2020.3.2f1": "8fd9074bf66c",
+                        "2020.3.1f1": "77a89f25062f",
+                        "2020.3.0f1": "c7b5465681fb"
+                    },
+                    "2": {
+                        "2020.2.7f1": "c53830e277f1",
+                        "2020.2.6f1": "8a2143876886",
+                        "2020.2.5f1": "e2c53f129de5",
+                        "2020.2.4f1": "becced5a802b",
+                        "2020.2.3f1": "8ff31bc5bf5b",
+                        "2020.2.2f1": "068178b99f32",
+                        "2020.2.1f1": "270dd8c3da1c",
+                        "2020.2.0f1": "3721df5a8b28"
+                    },
+                    "1": {
+                        "2020.1.17f1": "9957aee8edc2",
+                        "2020.1.16f1": "f483ad6465d6",
+                        "2020.1.15f1": "97d0ae02d19d",
+                        "2020.1.14f1": "d81f64f5201d",
+                        "2020.1.13f1": "5e24f28bfbc0",
+                        "2020.1.12f1": "55b56f0a86e3",
+                        "2020.1.11f1": "698c1113cef0",
+                        "2020.1.10f1": "974a9d56f159",
+                        "2020.1.9f1": "145f5172610f",
+                        "2020.1.8f1": "22e8c0b0c3ec",
+                        "2020.1.7f1": "064ffcdb64ad",
+                        "2020.1.6f1": "fc477ca6df10",
+                        "2020.1.5f1": "e025938fdedc",
+                        "2020.1.4f1": "fa717bb873ec",
+                        "2020.1.3f1": "cf5c4788e1d8",
+                        "2020.1.2f1": "7b32bc54ba47",
+                        "2020.1.1f1": "2285c3239188",
+                        "2020.1.0f1": "2ab9c4179772"
+                    }
+                },
+                "2019": {
+                    "4": {
+                        "2019.4.40f1": "ffc62b691db5",
+                        "2019.4.39f1": "78d14dfa024b",
+                        "2019.4.38f1": "fdbb7325fa47",
+                        "2019.4.37f1": "019e31cfdb15",
+                        "2019.4.36f1": "660c164b2fc5",
+                        "2019.4.35f1": "0462406dff2e",
+                        "2019.4.34f1": "6a9faed444f2",
+                        "2019.4.33f1": "c9b2b02eeeef",
+                        "2019.4.32f1": "f88bf0bee961",
+                        "2019.4.31f1": "bd5abf232a62",
+                        "2019.4.30f1": "e8c891080a1f",
+                        "2019.4.29f1": "0eeae20b1d82",
+                        "2019.4.28f1": "1381962e9d08",
+                        "2019.4.27f1": "23dc10685eb4",
+                        "2019.4.26f1": "e0392c6b2363",
+                        "2019.4.25f1": "01a0494af254",
+                        "2019.4.24f1": "5da6f0345e82",
+                        "2019.4.23f1": "3f4e01f1a5ec",
+                        "2019.4.22f1": "9fdda2fe27ad",
+                        "2019.4.21f1": "b76dac84db26",
+                        "2019.4.20f1": "6dd1c08eedfa",
+                        "2019.4.19f1": "ca5b14067cec",
+                        "2019.4.18f1": "3310a4d4f880",
+                        "2019.4.17f1": "667c8606c536",
+                        "2019.4.16f1": "e05b6e02d63e",
+                        "2019.4.15f1": "fbf367ac14e9",
+                        "2019.4.14f1": "4037e52648cd",
+                        "2019.4.13f1": "518737b1de84",
+                        "2019.4.12f1": "225e826a680e",
+                        "2019.4.11f1": "2d9804dddde7",
+                        "2019.4.10f1": "5311b3af6f69",
+                        "2019.4.9f1": "50fe8a171dd9",
+                        "2019.4.8f1": "60781d942082",
+                        "2019.4.7f1": "e992b1a16e65",
+                        "2019.4.6f1": "a7aea80e3716",
+                        "2019.4.5f1": "81610f64359c",
+                        "2019.4.4f1": "1f1dac67805b",
+                        "2019.4.3f1": "f880dceab6fe",
+                        "2019.4.2f1": "20b4642a3455",
+                        "2019.4.1f1": "e6c045e14e4e",
+                        "2019.4.0f1": "0af376155913"
+                    },
+                    "3": {
+                        "2019.3.15f1": "59ff3e03856d",
+                        "2019.3.14f1": "2b330bf6d2d8",
+                        "2019.3.13f1": "d4ddf0d95db9",
+                        "2019.3.12f1": "84b23722532d",
+                        "2019.3.11f1": "ceef2d848e70",
+                        "2019.3.10f1": "5968d7f82152",
+                        "2019.3.9f1": "e6e740a1c473",
+                        "2019.3.8f1": "4ba98e9386ed",
+                        "2019.3.7f1": "6437fd74d35d",
+                        "2019.3.6f1": "5c3fb0a11183",
+                        "2019.3.5f1": "d691e07d38ef",
+                        "2019.3.4f1": "4f139db2fdbd",
+                        "2019.3.3f1": "7ceaae5f7503",
+                        "2019.3.2f1": "c46a3a38511e",
+                        "2019.3.1f1": "89d6087839c2",
+                        "2019.3.0f6": "27ab2135bccf"
+                    },
+                    "2": {
+                        "2019.2.21f1": "9d528d026557",
+                        "2019.2.20f1": "c67d00285037",
+                        "2019.2.19f1": "929ab4d01772",
+                        "2019.2.18f1": "bbf64de26e34",
+                        "2019.2.17f1": "8e603399ca02",
+                        "2019.2.16f1": "b9898e2d04a4",
+                        "2019.2.15f1": "dcb72c2e9334",
+                        "2019.2.14f1": "49dd4e9fa428",
+                        "2019.2.13f1": "e20f6c7e5017",
+                        "2019.2.12f1": "b1a7e1fb4fa5",
+                        "2019.2.11f1": "5f859a4cfee5",
+                        "2019.2.10f1": "923acd2d43aa",
+                        "2019.2.9f1": "ebce4d76e6e8",
+                        "2019.2.8f1": "ff5b465c8d13",
+                        "2019.2.7f2": "c96f78eb5904",
+                        "2019.2.6f1": "fe82a0e88406",
+                        "2019.2.5f1": "9dace1eed4cc",
+                        "2019.2.4f1": "c63b2af89a85",
+                        "2019.2.3f1": "8e55c27a4621",
+                        "2019.2.2f1": "ab112815d860",
+                        "2019.2.1f1": "ca4d5af0be6f",
+                        "2019.2.0f1": "20c1667945cf"
+                    },
+                    "1": {
+                        "2019.1.14f1": "148b5891095a",
+                        "2019.1.13f1": "b5956c0a61e7",
+                        "2019.1.12f1": "f04f5427219e",
+                        "2019.1.11f1": "9b001d489a54",
+                        "2019.1.10f1": "f007ed779b7a",
+                        "2019.1.9f1": "d5f1b37da199",
+                        "2019.1.8f1": "7938dd008a75",
+                        "2019.1.7f1": "f3c4928e5742",
+                        "2019.1.6f1": "f2970305fe1c",
+                        "2019.1.5f1": "0ca0f5646614",
+                        "2019.1.4f1": "ffa3a7a2dd7d",
+                        "2019.1.3f1": "dc414eb9ed43",
+                        "2019.1.2f1": "3e18427e571f",
+                        "2019.1.1f1": "fef62e97e63b",
+                        "2019.1.0f2": "292b93d75a2c"
+                    }
+                },
+                "2018": {
+                    "4": {
+                        "2018.4.36f1": "6cd387d23174",
+                        "2018.4.35f1": "dbb5675dce2d",
+                        "2018.4.34f1": "ae2afac172fb",
+                        "2018.4.33f1": "d75f7e9df24c",
+                        "2018.4.32f1": "fba45da84107",
+                        "2018.4.31f1": "212ea663d844",
+                        "2018.4.30f1": "c698a062d8e6",
+                        "2018.4.29f1": "50cce2edf27f",
+                        "2018.4.28f1": "a2d4f71491a4",
+                        "2018.4.27f1": "4e283b7d3f88",
+                        "2018.4.26f1": "a7ac1c6396db",
+                        "2018.4.25f1": "b07bfa0a8827",
+                        "2018.4.24f1": "3071911a89e9",
+                        "2018.4.23f1": "c9cf1a90e812",
+                        "2018.4.22f1": "3362ffbb7aa1",
+                        "2018.4.21f1": "fd3915227633",
+                        "2018.4.20f1": "008688490035",
+                        "2018.4.19f1": "459f70f82ea4",
+                        "2018.4.18f1": "61fce66342ad",
+                        "2018.4.17f1": "b830f56f42f0",
+                        "2018.4.16f1": "e6e9ca02b32a",
+                        "2018.4.15f1": "13f5a1bf9ca1",
+                        "2018.4.14f1": "05119b33d0b7",
+                        "2018.4.13f1": "497f083a43af",
+                        "2018.4.12f1": "59ddc4c59b4f",
+                        "2018.4.11f1": "7098af2f11ea",
+                        "2018.4.10f1": "a0470569e97b",
+                        "2018.4.9f1": "ca372476eaba",
+                        "2018.4.8f1": "9bc9d983d803",
+                        "2018.4.7f1": "b9a993fd1334",
+                        "2018.4.6f1": "cde1bbcc9f0d",
+                        "2018.4.5f1": "7b38f8ac282e",
+                        "2018.4.4f1": "5440768ff61c",
+                        "2018.4.3f1": "8a9509a5aff9",
+                        "2018.4.2f1": "d6fb3630ea75",
+                        "2018.4.1f1": "b7c424a951c0",
+                        "2018.4.0f1": "b6ffa8986c8d"
+                    },
+                    "3": {
+                        "2018.3.14f1": "d0e9f15437b1",
+                        "2018.3.13f1": "06548a9e9582",
+                        "2018.3.12f1": "8afd630d1f5b",
+                        "2018.3.11f1": "5063218e4ab8",
+                        "2018.3.10f1": "f88de2c96e63",
+                        "2018.3.9f1": "947e1ea5aa8d",
+                        "2018.3.8f1": "fc0fe30d6d91",
+                        "2018.3.7f1": "9e14d22a41bb",
+                        "2018.3.6f1": "a220877bc173",
+                        "2018.3.5f1": "76b3e37670a4",
+                        "2018.3.4f1": "1d952368ca3a",
+                        "2018.3.3f1": "393bae82dbb8",
+                        "2018.3.2f1": "b3c100a4b73a",
+                        "2018.3.1f1": "bb579dc42f1d",
+                        "2018.3.0f2": "6e9a27477296"
+                    },
+                    "2": {
+                        "2018.2.21f1": "a122f5dc316d",
+                        "2018.2.20f1": "cef3e6c0c622",
+                        "2018.2.19f1": "06990f28ba00",
+                        "2018.2.18f1": "4550892b6062",
+                        "2018.2.17f1": "88933597c842",
+                        "2018.2.16f1": "39a4ac3d51f6",
+                        "2018.2.15f1": "65e0713a5949",
+                        "2018.2.14f1": "3262fb3b0716",
+                        "2018.2.13f1": "83fbdcd35118",
+                        "2018.2.12f1": "0a46ddfcfad4",
+                        "2018.2.11f1": "38bd7dec5000",
+                        "2018.2.10f1": "674aa5a67ed5",
+                        "2018.2.9f1": "2207421190e9",
+                        "2018.2.8f1": "ae1180820377",
+                        "2018.2.7f1": "4ebd28dd9664",
+                        "2018.2.6f1": "c591d9a97a0b",
+                        "2018.2.5f1": "3071d1717b71",
+                        "2018.2.4f1": "cb262d9ddeaf",
+                        "2018.2.3f1": "1431a7d2ced7",
+                        "2018.2.2f1": "c18cef34cbcd",
+                        "2018.2.1f1": "1a9968d9f99c",
+                        "2018.2.0f2": "787658998520"
+                    },
+                    "1": {
+                        "2018.1.9f2": "a6cc294b73ee",
+                        "2018.1.8f1": "26051d4de9e9",
+                        "2018.1.7f1": "4cb482063d12",
+                        "2018.1.6f1": "57cc34175ccf",
+                        "2018.1.5f1": "732dbf75922d",
+                        "2018.1.4f1": "1a308f4ebef1",
+                        "2018.1.3f1": "a53ad04f7c7f",
+                        "2018.1.2f1": "a46d718d282d",
+                        "2018.1.1f1": "b8cbb5de9840",
+                        "2018.1.0f2": "d4d99f31acba"
+                    }
+                },
+                "2017": {
+                    "4": {
+                        "2017.4.40f1": "6e14067f8a9a",
+                        "2017.4.39f1": "947131c5be7e",
+                        "2017.4.38f1": "82ac2fb100ce",
+                        "2017.4.37f1": "78b69503ebc4",
+                        "2017.4.36f1": "c663def8414c",
+                        "2017.4.35f1": "e57a7bcbbf0b",
+                        "2017.4.34f1": "121f18246307",
+                        "2017.4.33f1": "a8557a619e24",
+                        "2017.4.32f1": "4da3ed968770",
+                        "2017.4.31f1": "9c8dbc3421cb",
+                        "2017.4.30f1": "c6fa43736cae",
+                        "2017.4.29f1": "06508aa14ca1",
+                        "2017.4.28f1": "e3a0f7dd2097",
+                        "2017.4.27f1": "0c4b856e4c6e",
+                        "2017.4.26f1": "3b349d10f010",
+                        "2017.4.25f1": "9cba1c3a94f1",
+                        "2017.4.24f1": "786769fc3439",
+                        "2017.4.23f1": "f80c8a98b1b5",
+                        "2017.4.22f1": "eb4bc6fa7f1d",
+                        "2017.4.21f1": "de35fe252486",
+                        "2017.4.20f2": "413dbd19b6dc",
+                        "2017.4.19f1": "47cd37c28be8",
+                        "2017.4.18f1": "a9236f402e28",
+                        "2017.4.17f1": "05307cddbb71",
+                        "2017.4.16f1": "7f7bdd1ef02b",
+                        "2017.4.15f1": "5d485b4897a7",
+                        "2017.4.14f1": "b28150134d55",
+                        "2017.4.13f1": "6902ad48015d",
+                        "2017.4.12f1": "b582b87345b1",
+                        "2017.4.11f1": "8c6b8ef6d111",
+                        "2017.4.10f1": "f2cce2a5991f",
+                        "2017.4.9f1": "6d84dfc57ccf",
+                        "2017.4.8f1": "5ab7f4878ef1",
+                        "2017.4.7f1": "de9eb5ca33c5",
+                        "2017.4.6f1": "c24f30193bac",
+                        "2017.4.5f1": "89d1db9cb682",
+                        "2017.4.4f1": "645c9050ba4d",
+                        "2017.4.3f1": "21ae32b5a9cb",
+                        "2017.4.2f2": "52d9cb89b362",
+                        "2017.4.1f1": "9231f953d9d3",
+                        "2017.4.0f1": "b5bd171ee9ba"
+                    },
+                    "3": {
+                        "2017.3.1f1": "fc1d3344e6ea",
+                        "2017.3.0f3": "a9f86dcd79df"
+                    },
+                    "2": {
+                        "2017.2.5f1": "588dc79c95ed",
+                        "2017.2.4f1": "f1557d1f61fd",
+                        "2017.2.3f1": "372229934efd",
+                        "2017.2.2f1": "1f4e0f9b6a50",
+                        "2017.2.1f1": "94bf3f9e6b5e",
+                        "2017.2.0f3": "46dda1414e51"
+                    },
+                    "1": {
+                        "2017.1.5f1": "9758a36cfaa6",
+                        "2017.1.4f1": "9fd71167a288",
+                        "2017.1.3f1": "574eeb502d14",
+                        "2017.1.2f1": "cc85bf6a8a04",
+                        "2017.1.1f1": "5d30cf096e79",
+                        "2017.1.0f3": "472613c02cf7"
+                    }
+                },
+                "5": {
+                    "6": {
+                        "5.6.7f1": "e80cc3114ac1",
+                        "5.6.6f2": "6bac21139588",
+                        "5.6.5f1": "2cac56bf7bb6",
+                        "5.6.4f1": "ac7086b8d112",
+                        "5.6.3f1": "d3101c3b8468",
+                        "5.6.2f1": "a2913c821e27",
+                        "5.6.1f1": "2860b30f0b54",
+                        "5.6.0f3": "497a0f351392"
+                    }
+                }
+            },
+        };
+
+        // 加载数据
+        versionsData = defaultVersionsData;
+
+        initializeUI();
+
+        // 初始化UI
+        function initializeUI() {
+            if (!versionsData) return;
+
+            // 下载说明折叠功能
+            const infoToggle = document.getElementById('info-toggle');
+            const infoSection = document.getElementById('info-section');
+            const toggleInfoBtn = document.getElementById('toggle-info-btn');
+
+            // 点击标题栏关闭帮助面板
+            infoToggle.addEventListener('click', function () {
+                infoSection.classList.remove('show');
+            });
+
+            // 点击悬浮按钮显示/隐藏帮助面板
+            toggleInfoBtn.addEventListener('click', function () {
+                infoSection.classList.toggle('show');
+            });
+
+            // 点击其它地方隐藏帮助面板
+            document.addEventListener('click', function (e) {
+                if (!infoSection.contains(e.target) && e.target !== toggleInfoBtn) {
+                    infoSection.classList.remove('show');
+                }
+            });
+
+            // 生成版本导航
+            generateVersionNav();
+
+            // 初始显示所有版本
+            displayVersions('all');
+
+            // 添加搜索事件处理
+            document.getElementById('search-input').addEventListener('input', function (e) {
+                const searchTerm = e.target.value.toLowerCase();
+                filterVersions(searchTerm);
+            });
+
+            // 添加主版本筛选事件
+            document.getElementById('major-version').addEventListener('change', function (e) {
+                displayVersions(e.target.value);
+            });
+
+            // 添加平台切换事件
+            document.querySelectorAll('.platform-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    document.querySelectorAll('.platform-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    currentPlatform = this.dataset.platform;
+
+                    // 重新生成当前选中的版本显示
+                    const currentMajorVersion = document.getElementById('major-version').value;
+                    displayVersions(currentMajorVersion);
+                });
+            });
+
+            // 组件按钮点击事件
+            document.querySelectorAll('.component-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    this.classList.toggle('selected');
+                });
+            });
+        }
+
+        // 生成版本导航
+        function generateVersionNav() {
+            const navList = document.getElementById('version-nav-list');
+            navList.innerHTML = '';
+
+            // 添加"全部版本"选项
+            const allVersionsItem = document.createElement('li');
+            const allVersionsButton = document.createElement('button');
+            allVersionsButton.textContent = '全部版本';
+            allVersionsButton.classList.add('active');
+            allVersionsButton.dataset.version = 'all';
+            allVersionsButton.addEventListener('click', function () {
+                document.querySelectorAll('#version-nav-list button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                displayVersions('all');
+                document.getElementById('major-version').value = 'all';
+            });
+            allVersionsItem.appendChild(allVersionsButton);
+            navList.appendChild(allVersionsItem);
+
+            // 获取所有主版本并按版本号从大到小排序
+            const majorVersions = Object.keys(versionsData.versions);
+
+            // 自定义排序逻辑，处理数字版本和非数字版本
+            majorVersions.sort((a, b) => {
+                // 处理Unity 6000这类特殊版本
+                if (a.startsWith('60') && !b.startsWith('60')) return -1;
+                if (!a.startsWith('60') && b.startsWith('60')) return 1;
+
+                // 正常的年份版本，按数字从大到小排序
+                return parseInt(b) - parseInt(a);
+            });
+
+            // 添加每个主版本
+            for (const majorVersion of majorVersions) {
+                const item = document.createElement('li');
+                const button = document.createElement('button');
+                const displayName = majorVersion.startsWith('60') ? `Unity ${majorVersion}` : `Unity ${majorVersion}`;
+                button.textContent = displayName;
+                button.dataset.version = majorVersion;
+
+                button.addEventListener('click', function () {
+                    document.querySelectorAll('#version-nav-list button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    displayVersions(majorVersion);
+                    document.getElementById('major-version').value = majorVersion;
+                });
+
+                item.appendChild(button);
+                navList.appendChild(item);
+            }
+        }
+
+        // 显示版本列表函数中，修改对主版本的排序和子版本的处理
+        function displayVersions(majorVersion) {
+            const contentContainer = document.getElementById('versions-content');
+            contentContainer.innerHTML = '';
+
+            // 如果没有数据，不显示任何内容
+            if (!versionsData || !versionsData.versions) {
+                contentContainer.innerHTML = '<p>没有可用的版本数据</p>';
+                return;
+            }
+
+            if (majorVersion === 'all') {
+                // 获取所有主版本并按版本号从大到小排序（新版本在前面）
+                const sortedMajorVersions = Object.keys(versionsData.versions).sort((a, b) => {
+                    // 处理Unity 6000这类特殊版本
+                    if (a.startsWith('60') && !b.startsWith('60')) return -1;
+                    if (!a.startsWith('60') && b.startsWith('60')) return 1;
+
+                    // 正常的年份版本，按数字从大到小排序
+                    return parseInt(b) - parseInt(a);
+                });
+
+                // 显示所有主版本，但按排序后的顺序
+                for (const major of sortedMajorVersions) {
+                    const majorVersionGroup = createVersionGroup(major, versionsData.versions[major]);
+                    if (majorVersionGroup) {
+                        contentContainer.appendChild(majorVersionGroup);
+                    }
+                }
+            } else {
+                // 显示特定主版本
+                const majorData = versionsData.versions[majorVersion];
+                if (majorData) {
+                    const majorVersionGroup = createVersionGroup(majorVersion, majorData);
+                    if (majorVersionGroup) {
+                        contentContainer.appendChild(majorVersionGroup);
+                    }
+                } else {
+                    contentContainer.innerHTML = `
+            <div style="padding: 20px; text-align: center; color: #666; font-style: italic;">
+                未找到版本 "${majorVersion}" 的数据
+            </div>`;
+                }
+            }
+        }
+
+        // 将版本排序（最新的在前）
+        // 这段代码替换原有的排序逻辑
+        function compareVersions(a, b) {
+            // 提取版本号主要部分（去除 "f1" 等后缀）
+            const getVersionParts = (version) => {
+                // 匹配格式: "2022.3.61f1" => ["2022", "3", "61"]
+                const parts = version.split('.');
+                if (parts.length >= 3) {
+                    // 处理第三部分中可能包含的非数字（如 "61f1"）
+                    const thirdPart = parts[2].match(/^(\d+)/);
+                    if (thirdPart) {
+                        parts[2] = thirdPart[1];
+                    }
+                    return parts.map(Number); // 转换为数字数组 [2022, 3, 61]
+                }
+                return version; // 如果格式不匹配，返回原始版本字符串
+            };
+
+            const partsA = getVersionParts(a);
+            const partsB = getVersionParts(b);
+
+            // 如果解析成了数组，则进行数字比较
+            if (Array.isArray(partsA) && Array.isArray(partsB)) {
+                // 比较主版本号
+                if (partsA[0] !== partsB[0]) return partsB[0] - partsA[0];
+                // 比较次版本号
+                if (partsA[1] !== partsB[1]) return partsB[1] - partsA[1];
+                // 比较修订版本号
+                return partsB[2] - partsA[2];
+            }
+
+            // 回退到字符串比较
+            return b.localeCompare(a);
+        }
+
+        // 创建版本组函数中，添加子版本排序逻辑
+        function createVersionGroup(majorVersion, majorData) {
+            const group = document.createElement('div');
+            group.className = 'version-group';
+
+            const displayName = majorVersion.startsWith('60') ? `Unity ${majorVersion}` : `Unity ${majorVersion}`;
+            const title = document.createElement('h2');
+            title.className = 'version-group-title';
+            title.textContent = displayName;
+
+            // 计算符合当前平台的版本总数
+            let totalVersionCount = 0;
+
+            // 获取所有次版本并按版本号从大到小排序
+            const sortedMinorVersions = Object.keys(majorData).sort((a, b) => {
+                // 处理特殊格式的子版本号
+                if (a.includes('.') && b.includes('.')) {
+                    // 如果格式是像 "2020.1" 这样的，需要特殊处理
+                    const aParts = a.split('.');
+                    const bParts = b.split('.');
+                    if (aParts.length > 1 && bParts.length > 1) {
+                        // 先比较第一部分
+                        const aFirst = parseInt(aParts[0]);
+                        const bFirst = parseInt(bParts[0]);
+                        if (aFirst !== bFirst) {
+                            return bFirst - aFirst; // 大的在前
+                        }
+                        // 再比较第二部分
+                        return parseInt(bParts[1]) - parseInt(aParts[1]);
+                    }
+                }
+                // 直接用数字比较
+                return parseFloat(b) - parseFloat(a);
+            });
+
+            // 遍历排序后的次版本
+            for (const minorVersion of sortedMinorVersions) {
+                const subGroup = document.createElement('div');
+                subGroup.className = 'version-subgroup';
+
+                const subTitle = document.createElement('h3');
+                subTitle.className = 'version-subgroup-title';
+                const isLTS = ltsVersions.includes(`${majorVersion}.${minorVersion}`);
+                subTitle.textContent = `${majorVersion}.${minorVersion}`;
+
+                if (isLTS) {
+                    const ltsBadge = document.createElement('span');
+                    ltsBadge.className = 'lts-badge';
+                    ltsBadge.textContent = 'LTS';
+                    subTitle.appendChild(ltsBadge);
+                }
+
+                // 版本列表
+                const versionList = document.createElement('div');
+                versionList.className = 'version-list';
+
+                // 然后在函数中这样使用它
+                // 将版本排序（最新的在前）
+                const sortedVersions = Object.keys(majorData[minorVersion]).sort(compareVersions);
+
+                // 计算此次版本中符合当前平台的版本数量
+                let versionCount = 0;
+                let isFirstVersion = true;
+
+                for (const version of sortedVersions) {
+                    const md5 = majorData[minorVersion][version];
+
+                    // 检查是否支持当前平台
+                    if (!isPlatformSupported(version, currentPlatform)) {
+                        continue;
+                    }
+
+                    versionCount++;
+                    totalVersionCount++;
+
+                    const versionCard = createVersionCard(version, md5);
+
+                    // 只给每个子组中真正的第一个版本添加latest类
+                    if (isFirstVersion) {
+                        versionCard.classList.add('latest');
+                        isFirstVersion = false;
+                    }
+
+                    versionList.appendChild(versionCard);
+                }
+
+                // 添加版本数量
+                subTitle.setAttribute('data-count', versionCount);
+
+                // 为子组标题添加点击事件处理折叠功能
+                subTitle.addEventListener('click', function () {
+                    this.classList.toggle('collapsed');
+                    const list = this.nextElementSibling;
+                    list.classList.toggle('collapsed');
+                });
+
+                // 只添加有版本的次版本
+                if (versionCount > 0) {
+                    subGroup.appendChild(subTitle);
+                    subGroup.appendChild(versionList);
+                    group.appendChild(subGroup);
+                }
+            }
+
+            // 添加主版本总数
+            title.setAttribute('data-count', totalVersionCount);
+
+            // 只有当有版本时才添加标题和返回组
+            if (totalVersionCount > 0) {
+                group.prepend(title);
+                return group;
+            } else {
+                return null;
+            }
+        }
+
+        // 创建版本卡片
+        function createVersionCard(version, md5) {
+            const card = document.createElement('div');
+            card.className = 'version-card';
+            card.dataset.version = version.toLowerCase();
+
+            const versionName = document.createElement('div');
+            versionName.className = 'version-name';
+            versionName.textContent = version;
+            card.appendChild(versionName);
+
+            const versionMd5 = document.createElement('div');
+            versionMd5.className = 'version-md5';
+            versionMd5.textContent = `MD5: ${md5}`;
+            card.appendChild(versionMd5);
+
+            const downloadLinks = document.createElement('div');
+            downloadLinks.className = 'download-links';
+
+            // UnityHub链接
+            const hubLink = document.createElement('a');
+            hubLink.className = 'download-link';
+            hubLink.href = `unityhub://${version}/${md5}`;
+            hubLink.textContent = '通过Unity Hub安装';
+            hubLink.target = '_blank';
+            downloadLinks.appendChild(hubLink);
+
+            // 直接下载链接
+            const directLink = document.createElement('a');
+            directLink.className = 'download-link secondary';
+
+            // 根据当前选择的平台生成链接
+            let downloadUrl = '';
+            switch (currentPlatform) {
+                case 'Windows64':
+                    downloadUrl = `https://download.unity3d.com/download_unity/${md5}/Windows64EditorInstaller/UnitySetup64-${version}.exe`;
+                    directLink.textContent = '下载 Windows 64位安装程序';
+                    break;
+                case 'Windows32':
+                    downloadUrl = `https://download.unity3d.com/download_unity/${md5}/Windows32EditorInstaller/UnitySetup32-${version}.exe`;
+                    directLink.textContent = '下载 Windows 32位安装程序';
+                    break;
+                case 'WindowsArm64':
+                    downloadUrl = `https://download.unity3d.com/download_unity/${md5}/WindowsArm64EditorInstaller/UnitySetupArm64-${version}.exe`;
+                    directLink.textContent = '下载 Windows ARM64安装程序';
+                    break;
+                case 'MacIntel':
+                    downloadUrl = `https://download.unity3d.com/download_unity/${md5}/MacEditorInstaller/Unity-${version}.pkg`;
+                    directLink.textContent = '下载 Mac Intel安装程序';
+                    break;
+                case 'MacArm':
+                    downloadUrl = `https://download.unity3d.com/download_unity/${md5}/MacEditorInstallerArm64/Unity-${version}.pkg`;
+                    directLink.textContent = '下载 Mac Apple芯片安装程序';
+                    break;
+                case 'Linux':
+                    downloadUrl = `https://download.unity3d.com/download_unity/${md5}/LinuxEditorInstaller/Unity-${version}.tar.xz`;
+                    directLink.textContent = '下载 Linux安装程序';
+                    break;
+                default:
+                    downloadUrl = `https://download.unity3d.com/download_unity/${md5}/Windows64EditorInstaller/UnitySetup64-${version}.exe`;
+                    directLink.textContent = '下载 Windows 64位安装程序';
+            }
+
+            directLink.href = downloadUrl;
+            directLink.target = '_blank';
+            downloadLinks.appendChild(directLink);
+
+            card.appendChild(downloadLinks);
+
+            // 组件选择器
+            const componentSelector = document.createElement('div');
+            componentSelector.className = 'component-selector';
+
+            const componentTitle = document.createElement('div');
+            componentTitle.className = 'component-title';
+            componentTitle.textContent = '组件下载:';
+            componentSelector.appendChild(componentTitle);
+
+            // 组件选择下拉框
+            const componentSelect = document.createElement('select');
+            componentSelect.id = `component-select-${version.replace(/\./g, '-')}`;
+            componentSelect.style.width = '100%';
+            componentSelect.style.marginBottom = '8px';
+            componentSelect.style.fontSize = '13px';
+            componentSelect.style.padding = '6px';
+
+            // 根据当前平台获取可用组件
+            const componentOptions = getComponentOptionsForPlatform(currentPlatform);
+
+            componentOptions.forEach(option => {
+                const optionEl = document.createElement('option');
+                optionEl.value = option.value;
+                optionEl.textContent = option.text;
+                componentSelect.appendChild(optionEl);
+            });
+
+            componentSelector.appendChild(componentSelect);
+
+            // 组件下载按钮
+            const componentDownloadBtn = document.createElement('a');
+            componentDownloadBtn.className = 'download-link';
+            componentDownloadBtn.textContent = '下载所选组件';
+            componentDownloadBtn.href = '#';
+            componentDownloadBtn.style.fontSize = '13px';
+            componentDownloadBtn.style.padding = '6px 10px';
+            componentDownloadBtn.target = '_blank';
+
+            // 组件下载按钮事件处理代码
+            componentDownloadBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // 获取当前选中的组件值
+                const selectElement = document.getElementById(`component-select-${version.replace(/\./g, '-')}`);
+                const selectedComponent = selectElement.value;
+
+                let componentUrl = '';
+
+                switch (currentPlatform) {
+                    case 'Windows64':
+                    case 'Windows32':
+                    case 'WindowsArm64':
+                        componentUrl = `https://download.unity3d.com/download_unity/${md5}/TargetSupportInstaller/UnitySetup-${selectedComponent}-Support-for-Editor-${version}.exe`;
+                        break;
+                    case 'MacIntel':
+                    case 'MacArm':
+                        componentUrl = `https://download.unity3d.com/download_unity/${md5}/MacEditorTargetInstaller/UnitySetup-${selectedComponent}-Support-for-Editor-${version}.pkg`;
+                        break;
+                    case 'Linux':
+                        componentUrl = `https://download.unity3d.com/download_unity/${md5}/LinuxEditorTargetInstaller/UnitySetup-${selectedComponent}-Support-for-Editor-${version}.tar.xz`;
+                        break;
+                }
+
+                window.open(componentUrl, '_blank');
+            });
+
+            componentSelector.appendChild(componentDownloadBtn);
+            card.appendChild(componentSelector);
+
+            return card;
+        }
+
+        // 筛选版本
+        function filterVersions(searchTerm) {
+            // 清除搜索框后重新显示当前选择的主版本
+            if (!searchTerm) {
+                const currentMajorVersion = document.getElementById('major-version').value;
+                displayVersions(currentMajorVersion);
+                return;
+            }
+
+            const contentContainer = document.getElementById('versions-content');
+            searchTerm = searchTerm.toLowerCase();
+            console.log("搜索词:", searchTerm);
+
+            // 重要：恢复原始内容 - 先重新显示当前选择的主版本
+            const currentMajorVersion = document.getElementById('major-version').value;
+            displayVersions(currentMajorVersion);
+
+            // 获取刚刚重新生成的版本卡片
+            const allCards = document.querySelectorAll('.version-card');
+            console.log("重新生成后找到卡片数量:", allCards.length);
+
+            let hasMatchingVersion = false;
+
+            // 直接处理每个卡片
+            allCards.forEach(card => {
+                const versionText = card.querySelector('.version-name').textContent.toLowerCase();
+                const isMatch = versionText.includes(searchTerm);
+
+                if (isMatch) {
+                    card.style.display = '';
+                    hasMatchingVersion = true;
+                    console.log("匹配版本:", versionText);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // 更新子版本组数量和可见性
+            document.querySelectorAll('.version-subgroup').forEach(subgroup => {
+                // 查找显示的卡片（非none）
+                const visibleCards = [...subgroup.querySelectorAll('.version-card')].filter(card =>
+                    card.style.display !== 'none'
+                );
+
+                const countElement = subgroup.querySelector('.version-subgroup-title');
+
+                if (visibleCards.length === 0) {
+                    subgroup.style.display = 'none';
+                } else {
+                    subgroup.style.display = '';
+                    if (countElement) {
+                        countElement.setAttribute('data-count', visibleCards.length);
+                    }
+                }
+            });
+
+            // 更新主版本组数量和可见性
+            document.querySelectorAll('.version-group').forEach(group => {
+                // 查找显示的子组（非none）
+                const visibleSubgroups = [...group.querySelectorAll('.version-subgroup')]
+                    .filter(subgroup => subgroup.style.display !== 'none');
+
+                if (visibleSubgroups.length === 0) {
+                    group.style.display = 'none';
+                } else {
+                    group.style.display = '';
+
+                    // 计算主版本组中所有可见的卡片
+                    const visibleCards = [...group.querySelectorAll('.version-card')]
+                        .filter(card => card.style.display !== 'none');
+
+                    const titleElement = group.querySelector('.version-group-title');
+                    if (titleElement) {
+                        titleElement.setAttribute('data-count', visibleCards.length);
+                    }
+                }
+            });
+
+            // 处理没有匹配结果的情况
+            if (!hasMatchingVersion) {
+                contentContainer.innerHTML = `
+                    <div style="padding: 20px; text-align: center; color: #666; font-style: italic;">
+                        没有找到包含 "${searchTerm}" 的版本
+                    </div>
+                `;
+            }
+        }
+
+
+        // 检查版本是否支持当前平台
+        function isPlatformSupported(version, platform) {
+            // 从版本字符串中提取版本号部分
+            const versionMatch = version.match(/^(\d+)\.(\d+)\.(\d+)/);
+            if (!versionMatch) return false;
+
+            const majorVersion = versionMatch[1];
+            const minorVersion = versionMatch[2];
+            const patchVersion = versionMatch[3].split(/[a-z]/)[0]; // 去掉字母后缀(f1,b1等)
+
+            switch (platform) {
+                case 'Windows64':
+                    // Windows 64位支持所有版本
+                    return true;
+
+                case 'Windows32':
+                    // Windows 32位只支持Unity 5.x
+                    return majorVersion === '5';
+
+                case 'WindowsArm64':
+                    // Windows ARM64只支持Unity 6000及以上版本
+                    return majorVersion === '6000' || parseInt(majorVersion) >= 6000;
+
+                case 'MacIntel':
+                    // Mac Intel支持所有版本
+                    return true;
+
+                case 'MacArm':
+                    // Mac Apple芯片需要2021.2.0或更高
+                    if (parseInt(majorVersion) > 2021) return true;
+                    if (parseInt(majorVersion) === 2021) {
+                        if (parseInt(minorVersion) > 2) return true;
+                        if (parseInt(minorVersion) === 2 && parseInt(patchVersion) >= 0) return true;
+                    }
+                    return false;
+
+                case 'Linux':
+                    // Linux需要2017.4.6或更高
+                    if (parseInt(majorVersion) > 2017) return true;
+                    if (parseInt(majorVersion) === 2017) {
+                        if (parseInt(minorVersion) > 4) return true;
+                        if (parseInt(minorVersion) === 4 && parseInt(patchVersion) >= 6) return true;
+                    }
+                    return false;
+
+                default:
+                    return true;
+            }
+        }
+
+        // 获取特定平台的组件选项
+        function getComponentOptionsForPlatform(platform) {
+            // 基础组件（所有平台通用）
+            const baseComponents = [
+                { value: 'Android', text: 'Android Build Support' },
+                { value: 'iOS', text: 'iOS Build Support' },
+                { value: 'WebGL', text: 'WebGL Build Support' },
+                { value: 'AppleTV', text: 'tvOS Build Support' }
+            ];
+
+            // 平台特定组件
+            const platformSpecificComponents = {
+                'Windows64': [
+                    { value: 'Linux-IL2CPP', text: 'Linux Build Support (IL2CPP)' },
+                    { value: 'Linux-Mono', text: 'Linux Build Support (Mono)' },
+                    { value: 'Linux-Server', text: 'Linux Dedicated Server Build Support' },
+                    { value: 'Mac-Mono', text: 'Mac Build Support (Mono)' },
+                    { value: 'Mac-Server', text: 'Mac Dedicated Server Build Support' },
+                    { value: 'Windows-IL2CPP', text: 'Windows Build Support (IL2CPP)' },
+                    { value: 'Windows-Server', text: 'Windows Dedicated Server Build Support' },
+                    { value: 'Universal-Windows-Platform', text: 'Universal Windows Platform Build Support' }
+                ],
+                'Windows32': [
+                    { value: 'Linux-IL2CPP', text: 'Linux Build Support (IL2CPP)' },
+                    { value: 'Linux-Mono', text: 'Linux Build Support (Mono)' },
+                    { value: 'Linux-Server', text: 'Linux Dedicated Server Build Support' },
+                    { value: 'Mac-Mono', text: 'Mac Build Support (Mono)' },
+                    { value: 'Mac-Server', text: 'Mac Dedicated Server Build Support' },
+                    { value: 'Windows-IL2CPP', text: 'Windows Build Support (IL2CPP)' },
+                    { value: 'Windows-Server', text: 'Windows Dedicated Server Build Support' },
+                    { value: 'Universal-Windows-Platform', text: 'Universal Windows Platform Build Support' }
+                ],
+                'WindowsArm64': [
+                    { value: 'Linux-IL2CPP', text: 'Linux Build Support (IL2CPP)' },
+                    { value: 'Linux-Mono', text: 'Linux Build Support (Mono)' },
+                    { value: 'Linux-Server', text: 'Linux Dedicated Server Build Support' },
+                    { value: 'Mac-Mono', text: 'Mac Build Support (Mono)' },
+                    { value: 'Mac-Server', text: 'Mac Dedicated Server Build Support' },
+                    { value: 'Windows-IL2CPP', text: 'Windows Build Support (IL2CPP)' },
+                    { value: 'Windows-Server', text: 'Windows Dedicated Server Build Support' },
+                    { value: 'Universal-Windows-Platform', text: 'Universal Windows Platform Build Support' }
+                ],
+                'MacIntel': [
+                    { value: 'Linux-IL2CPP', text: 'Linux Build Support (IL2CPP)' },
+                    { value: 'Linux-Mono', text: 'Linux Build Support (Mono)' },
+                    { value: 'Linux-Server', text: 'Linux Dedicated Server Build Support' },
+                    { value: 'Mac-IL2CPP', text: 'Mac Build Support (IL2CPP)' },
+                    { value: 'Mac-Server', text: 'Mac Dedicated Server Build Support' },
+                    { value: 'Windows-Mono', text: 'Windows Build Support (Mono)' },
+                    { value: 'Windows-Server', text: 'Windows Dedicated Server Build Support' },
+                    { value: 'Universal-Windows-Platform', text: 'Universal Windows Platform Build Support' }
+                ],
+                'MacArm': [
+                    { value: 'Linux-IL2CPP', text: 'Linux Build Support (IL2CPP)' },
+                    { value: 'Linux-Mono', text: 'Linux Build Support (Mono)' },
+                    { value: 'Linux-Server', text: 'Linux Dedicated Server Build Support' },
+                    { value: 'Mac-IL2CPP', text: 'Mac Build Support (IL2CPP)' },
+                    { value: 'Mac-Server', text: 'Mac Dedicated Server Build Support' },
+                    { value: 'Windows-Mono', text: 'Windows Build Support (Mono)' },
+                    { value: 'Windows-Server', text: 'Windows Dedicated Server Build Support' },
+                    { value: 'Universal-Windows-Platform', text: 'Universal Windows Platform Build Support' }
+                ],
+                'Linux': [
+                    { value: 'Linux-IL2CPP', text: 'Linux Build Support (IL2CPP)' },
+                    { value: 'Linux-Server', text: 'Linux Dedicated Server Build Support' },
+                    { value: 'Mac-Mono', text: 'Mac Build Support (Mono)' },
+                    { value: 'Mac-Server', text: 'Mac Dedicated Server Build Support' },
+                    { value: 'Windows-Mono', text: 'Windows Build Support (Mono)' },
+                    { value: 'Windows-Server', text: 'Windows Dedicated Server Build Support' },
+                    { value: 'Universal-Windows-Platform', text: 'Universal Windows Platform Build Support' }
+                ]
+            };
+
+            return [...baseComponents, ...platformSpecificComponents[platform]];
+        }
+    </script>
+</body>
+
+</html>
