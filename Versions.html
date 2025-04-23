@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 
 <head>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unity版本下载中心（国际版）</title>
@@ -82,6 +83,42 @@
             line-height: 1.6;
             opacity: 0.9;
             font-weight: 300;
+        }
+
+        /* 右上角访问统计样式 */
+        .top-visitor-count {
+            position: absolute;
+            top: 12px;
+            right: 25px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .top-visitor-count span {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .top-visitor-count span#busuanzi_container_site_pv::before {
+            content: "👁️";
+            margin-right: 4px;
+        }
+
+        .top-visitor-count span#busuanzi_container_site_uv::before {
+            content: "👤";
+            margin-right: 4px;
+        }
+
+        .top-visitor-count .count-value {
+            font-weight: 600;
+            color: white;
         }
 
         /* 过滤器和工具容器 */
@@ -1165,6 +1202,40 @@
             border-color: var(--primary-color);
         }
 
+        /* 头部中的访问统计样式 */
+        .header-content .visitor-count {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 6px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-content .visitor-count span {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .header-content .visitor-count span#busuanzi_container_site_pv::before {
+            content: "👁️";
+            margin-right: 6px;
+        }
+
+        .header-content .visitor-count span#busuanzi_container_site_uv::before {
+            content: "👤";
+            margin-right: 6px;
+        }
+
+        .header-content .visitor-count .count-value {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
         .github-icon {
             margin-right: 5px;
             width: 16px;
@@ -1217,6 +1288,7 @@
                 overflow-x: auto;
             }
         }
+
 
         @media (max-width: 768px) {
             .versions-container {
@@ -1320,6 +1392,13 @@
             .tool-actions .download-link {
                 width: 100%;
             }
+
+            .top-visitor-count {
+                top: 8px;
+                right: 15px;
+                font-size: 11px;
+                padding: 3px 8px;
+            }
         }
     </style>
 </head>
@@ -1327,12 +1406,19 @@
 <body>
     <header>
         <div class="container">
+            <!-- 在右上角添加访问统计 -->
+            <div class="top-visitor-count">
+                <span id="busuanzi_container_site_pv">
+                    访问量: <span id="busuanzi_value_site_pv" class="count-value"></span>
+                </span>
+                <span id="busuanzi_container_site_uv">
+                    访客: <span id="busuanzi_value_site_uv" class="count-value"></span>
+                </span>
+            </div>
+
             <div class="header-content">
                 <h1>Unity版本下载中心（国际版）</h1>
                 <p class="description">提供所有Unity版本的下载链接，支持UnityHub链接和直接下载</p>
-                <!-- <div class="author-info">
-                    <span>作者：依旧</span>
-                </div> -->
             </div>
         </div>
     </header>
@@ -1531,7 +1617,7 @@
                         <span>© 2025 依旧</span>
                     </div>
                     <div class="footer-meta">
-                        <span>最后更新: 2025/4/20</span>
+                        <span>最后更新: 2025/4/23</span>
                         <a href="https://unity.com/releases/editor/archive" target="_blank">Unity 官方网站</a>
                         <a href="https://github.com/YiJiu-Li" class="github-link" target="_blank">
                             <svg class="github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
